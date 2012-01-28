@@ -19,13 +19,14 @@ const nMax = int64(1e18)
 const mMax = int64(1e7)
 
 var Debug = false
+
 var BruteOut *os.File
 
 func init() {
 	var err os.Error
 	log.SetFlags(log.Lshortfile)
 	if Debug {
-		BruteOut, err = os.Create("brute.csv")
+		BruteOut, err = os.Create("tmp/brute.csv")
 		if err != nil {
 			log.Print("Failed to create brute.csv: ", err)
 		}
@@ -123,6 +124,7 @@ func LcgOrbit(p, m, a, c, n int64) (skip []int64, cycle []int64, max int64) {
 	}
 	nskip := cv[p] - 1
 	ncycle := j - cv[p]
+	log.Print(p, m, a, c, nskip, ncycle)
 
 	// forcing generating more here insures the skip lengths are the
 	// same.  I am pretty sure the max skip length is ~ 24 .since we
@@ -164,11 +166,12 @@ func ComputeCase(a *Auction) (nt, nb int64) {
 		}
 	}
 	n -= int64(len(ps))
-
-	if n > 0 {
+	cycle := Lcm(int64(len(po)), int64(len(wo)))
+	log.Printf("%#v", a)
+	log.Printf("%v %v %v GCD: %v Mult: %v N: %v", cycle, len(po), len(wo), Gcd(int64(len(po)), int64(len(wo))), a.N/cycle, a.N)
+	if n > 0 && false {
 		// now handle cyclic part
-		cycle := Lcm(int64(len(po)), int64(len(wo)))
-		log.Print(cycle, a)
+
 		mult := n / cycle
 		rem := n - mult*cycle
 		if rem > 0 {
@@ -276,10 +279,11 @@ func main() {
 			log.Panic(err)
 		}
 		a := ParseCase(i+1, line)
-		if Debug {
+		if Debug && a.N < 100000 {
 			ntb, nbb := ComputeCaseBrute(a)
 			fmt.Fprint(os.Stderr, "Brute Case #", a.Case, ": ", ntb, nbb, "\n")
 		}
+
 		nt, nb := ComputeCase(a)
 
 		log.Print("Case #", a.Case, ": ", nt, nb, "\n")
