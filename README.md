@@ -1,1 +1,1 @@
-Go Programs for the 2012 [Facebook Hackers Cup](http://www.facebook.com/hackercup).
+My Go Programs for the [Facebook Hackers Cup 2012](http://www.facebook.com/hackercup).
