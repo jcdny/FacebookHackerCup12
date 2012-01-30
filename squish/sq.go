@@ -26,9 +26,12 @@ type Case struct {
 const MOD = 4207849484
 
 func Count(m int, s string, memo map[string]int64) int64 {
-	//log.Print("m,s: ", m, " ", s)
+	if len(s) == 0 || s[0] == '0' {
+		// I left this out originally which is why I got case 16 wrong in the competition.
+		// Smooth move...
+		return 0
+	}
 	if n, ok := memo[s]; ok {
-		// log.Print("memo ", n, " \"", s, "\"")
 		return n
 	}
 	so := s
